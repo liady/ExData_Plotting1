@@ -4,25 +4,20 @@
 # This function reads the data from the file, subsets to desired dates,
 # fixes all variables, and returns the data frame
 getData <- function (){
-    setwd("C:/Users/user/Code/r/Exploratory Data Analysis/Project 1")
-    filename <- "household_power_consumption.txt"
     
-    # read all columns a characters (for better performance)
-    data <- read.table(filename, sep=";",header=TRUE, na.string = "?",
-                       colClasses="character")
+    # read all columns as characters (for better performance)
+    data <- read.table("household_power_consumption.txt", sep=";",
+                       header=TRUE, na.string = "?", colClasses="character")
     
     # subset to desired dates
     data <- subset(data, Date =="1/2/2007" | Date =="2/2/2007")
     
-    # fix the date/time variables
+    # set the datetime variable
     data$DateTime<-strptime(paste(data$Date, data$Time, sep = " "),
-                            "%d/%m/%Y %H:%M:%S")    
-    data$Date <- as.Date(data$Date, "%d/%m/%Y")
+                            "%d/%m/%Y %H:%M:%S")
     
     # coerce all other variables to numeric
-    s<-c("Global_active_power","Global_reactive_power","Voltage",
-         "Global_intensity","Sub_metering_1","Sub_metering_2","Sub_metering_3")
-    data[s]<-lapply(data[s],as.numeric)
+    data[3:9]<-lapply(data[3:9],as.numeric)
     
     # return data
     data
